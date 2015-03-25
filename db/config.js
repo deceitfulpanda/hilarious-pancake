@@ -10,6 +10,7 @@ var sequelize = new Sequelize(url, {
   protocol: 'postgres',
   port: match[4],
   host: match[3],
+  logging: false,
 
   pool: {
     max: 5,
