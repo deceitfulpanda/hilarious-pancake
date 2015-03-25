@@ -42,7 +42,7 @@ var getReq = function(token, imgurl, callback){
 };
 
 app.get('/api/test', function(req, res){
-  res.send(200, 'SUCCESS!');
+  res.status(200).send('SUCCESS!');
 });
 
 app.post('/api/imgurl', function(req, res){
