@@ -3,8 +3,9 @@ var expect  = require('chai').expect,
     pg      = require('pg'),
     db      = require('../db/config.js');
 
-describe("Persistent Sifter Server", function(){
+describe('Persistent Sifter Server', function(){
 	var requestWithSession = request.defaults({jar: true});
+
 	it('Can receive requests and return responses from the server', function(done){
 		var options = {
       'method': 'GET',
@@ -14,7 +15,12 @@ describe("Persistent Sifter Server", function(){
 
     requestWithSession(options, function(error, res, body){
     	expect(res.statusCode).to.equal(200);
+    	expect(res.body).to.equal('SUCCESS!');
 			done();
     });
 	});
+});
+
+describe('Item Classifier', function(){
+	
 });

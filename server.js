@@ -1,32 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var natural = require('natural');
 var unirest = require('unirest');
-var db = require('./db/config');
-
+var blackBox = require('./app/classify.js');
 var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-var blackBox = function(description, imgUrl, callback){
-  var classification;
-
-  natural.BayesClassifier.load('./app/classifier.json', null, function(err, classifier) {
-    classification = classifier.classify(description.name);
-
-    db.db.sync().then(function() {
-      return db.Item.create({
-        category: classification,
-        description: description.name,
-        url: imgUrl
-      })
-      .then(function(newItem){
-        callback(newItem.get('category'));
-      });
-    });
-  });
-}
 
 var getReq = function(token, imgurl, callback){
   unirest.get("https://camfind.p.mashape.com/image_responses/" + token)
