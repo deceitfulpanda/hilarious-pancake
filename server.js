@@ -9,7 +9,6 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
 var blackBox = function(description, imgUrl, callback){
   var classification;
 
@@ -65,4 +64,7 @@ app.post('/api/imgurl', function(req, res){
     });
 });
 
-app.listen(process.env.PORT || 8080);
+var port = process.env.PORT || 8080;
+app.listen(port);
+
+console.log('listening on port: ' + port );

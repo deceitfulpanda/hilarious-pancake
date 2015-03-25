@@ -7,7 +7,7 @@
   "description": "Sift your trash",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/ServerSpec.js"
   },
   "repository": {
     "type": "git",
@@ -29,10 +29,13 @@
   "homepage": "https://github.com/hilarious-pancake/hilarious-pancake",
   "dependencies": {
     "body-parser": "^1.12.0",
+    "chai": "^2.1.2",
     "express": "^4.12.2",
+    "mocha": "^2.2.1",
     "natural": "^0.2.0",
     "pg": "^4.3.0",
     "pg-hstore": "^2.3.1",
+    "request": "^2.54.0",
     "sequelize": "^2.0.4",
     "unirest": "^0.4.0"
   }
