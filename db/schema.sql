@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS sifter;
 
 USE sifter;
 
-CREATE TABLE item (
+CREATE TABLE items (
   id SERIAL,
   category VARCHAR(255),
   description VARCHAR(255),

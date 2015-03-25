@@ -1,9 +1,11 @@
+/*==================== REQUIRE DEPENDENCIES ====================*/
 var expect   = require('chai').expect,
     request  = require('request'),
     blackBox = require('../app/classify.js'),
     pg       = require('pg'),
     db       = require('../db/config.js');
 
+/*==================== TEST SERVER CONNECTION ====================*/
 describe('Persistent Sifter Server', function(){
   var requestWithSession = request.defaults({jar: true});
 
@@ -22,8 +24,9 @@ describe('Persistent Sifter Server', function(){
   });
 });
 
+/*================== TEST CLASSIFICATION AND DB ==================*/
 describe('Item Classifier', function(){
-
+  //initialize variables for each category
   var recycle = {
   	    description: { name: 'plastic bottle'},
         url: 'http://recycle.com' },
@@ -33,12 +36,13 @@ describe('Item Classifier', function(){
       landFill =  {
       	description: { name: 'metal cup'},
         url: 'http://landfill.com'};
-
+  //clear DB before each test
   beforeEach(function(done){
     db.db.query("TRUNCATE items").then(function(){ done(); });;
   });
 
   it('Saves classified item to the database', function(done){
+    //set callback function
     var getEntry = function(){
       db.Item.find({where: {url: 'http://www.test.com' }}).then(function(item) {
       	expect(item.dataValues.category).to.equal('recycle');
@@ -47,43 +51,47 @@ describe('Item Classifier', function(){
       	done();
       });
     };
-
+    //initialize object for description
     var string = {};
     string.name = 'midnight blue wool tuxedo';
+    //classify mock data and test
     blackBox(string, 'http://www.test.com', getEntry);
   });
 
   it('Classifies recyclable items based on description', function(done){
   	var classified;
+    //set callback function
   	var setClassified = function(category){
   		classified = category;
   		expect(classified).to.equal('recycle');
   		done();
   	};
-
+    //classify mock data and test
     blackBox(recycle.description, recycle.url, setClassified);
   });
 
   it('Classifies compostable items based on description', function(done){
   	var classified;
+    //set callback function
   	var setClassified = function(category){
   		classified = category;
   		expect(classified).to.equal('compost');
   		done();
   	};
-
+    //classify mock data and test
     blackBox(compost.description, compost.url, setClassified);
   });
 
   it('Classifies landfill items based on description', function(done){
   	var classified;
+    //set callback function
   	var setClassified = function(category){
   		classified = category;
   		expect(classified).to.equal('landfill');
   		db.db.query('TRUNCATE items');
   		done();
   	};
-
+    //classify mock data and test
     blackBox(landFill.description, landFill.url, setClassified);
   });
 });
