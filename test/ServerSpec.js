@@ -1,7 +1,8 @@
-var expect  = require('chai').expect,
-    request = require('request'),
-    pg      = require('pg'),
-    db      = require('../db/config.js');
+var expect   = require('chai').expect,
+    request  = require('request'),
+    blackBox = require('../app/classify.js'),
+    pg       = require('pg'),
+    db       = require('../db/config.js');
 
 describe('Persistent Sifter Server', function(){
 	var requestWithSession = request.defaults({jar: true});
@@ -22,5 +23,46 @@ describe('Persistent Sifter Server', function(){
 });
 
 describe('Item Classifier', function(){
-	
+	var recycle  =  { description: { name: 'plastic bottle'},
+                    url: 'http://recycle.com' },
+		  compost  =  { description: { name: 'paper plate'},
+		                url: 'http://compost.com'},
+		  landFill =  { description: { name: 'metal cup'},
+		                url: 'http://landfill.com'};
+
+	it('Will classify recyclable items based on description', function(done){
+		var classified;
+
+		var setClassified = function(category){
+			classified = category;
+			expect(classified).to.equal('recycle');
+			done();
+		};
+
+		blackBox(recycle.description, recycle.url, setClassified);
+	});
+
+	it('Will classify compostable items based on description', function(done){
+		var classified;
+
+		var setClassified = function(category){
+			classified = category;
+			expect(classified).to.equal('compost');
+			done();
+		};
+
+		blackBox(compost.description, compost.url, setClassified);
+	});
+
+	it('Will classify landfill items based on description', function(done){
+		var classified;
+
+		var setClassified = function(category){
+			classified = category;
+			expect(classified).to.equal('landfill');
+			done();
+		};
+
+		blackBox(landFill.description, landFill.url, setClassified);
+	});
 });
