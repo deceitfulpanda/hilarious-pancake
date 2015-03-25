@@ -2,9 +2,13 @@
 // SEQUELIZE //
 ///////////////
 
+/*==================== REQUIRE DEPENDENCIES ====================*/
 var Sequelize = require('sequelize');
+
+/*==================== SET UP DB CONNECTION ====================*/
 var url = process.env.DATABASE_URL || 'postgres://postgres:hello@localhost:5432/postgres';
 var match = url.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
+
 var sequelize = new Sequelize(url, {
   dialect: 'postgres',
   protocol: 'postgres',
@@ -19,6 +23,7 @@ var sequelize = new Sequelize(url, {
   },
 });
 
+/*================== SET UP SEQUELIZE MODELS ==================*/
 var Item = sequelize.define('item', {
   id: {
     type: Sequelize.INTEGER,
@@ -34,5 +39,6 @@ var Item = sequelize.define('item', {
   }
 });
 
+/*===================== EXPORT MODULES =====================*/
 exports.db = sequelize;
 exports.Item = Item;
