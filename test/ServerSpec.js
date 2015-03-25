@@ -23,6 +23,7 @@ describe('Persistent Sifter Server', function(){
 });
 
 describe('Item Classifier', function(){
+
 	var recycle  =  { description: { name: 'plastic bottle'},
                     url: 'http://recycle.com' },
 		  compost  =  { description: { name: 'paper plate'},
@@ -30,7 +31,26 @@ describe('Item Classifier', function(){
 		  landFill =  { description: { name: 'metal cup'},
 		                url: 'http://landfill.com'};
 
-	it('Will classify recyclable items based on description', function(done){
+	beforeEach(function(done){
+		db.db.query("TRUNCATE items").then(function(){ done(); });;
+	});
+
+  it('Saves classified item to the database', function(done){
+  	var getEntry = function(){
+  		db.Item.find({where: {url: 'http://www.test.com' }}).then(function(item) {
+  			expect(item.dataValues.category).to.equal('recycle');
+  			expect(item.dataValues.description).to.equal(string.name);
+  			expect(item.dataValues.url).to.equal('http://www.test.com');
+  			done();
+			});
+  	};
+
+  	var string = {};
+  	string.name = 'midnight blue wool tuxedo';
+  	blackBox(string, 'http://www.test.com', getEntry);
+  });
+
+	it('Classifies recyclable items based on description', function(done){
 		var classified;
 
 		var setClassified = function(category){
@@ -42,7 +62,7 @@ describe('Item Classifier', function(){
 		blackBox(recycle.description, recycle.url, setClassified);
 	});
 
-	it('Will classify compostable items based on description', function(done){
+	it('Classifies compostable items based on description', function(done){
 		var classified;
 
 		var setClassified = function(category){
@@ -54,12 +74,13 @@ describe('Item Classifier', function(){
 		blackBox(compost.description, compost.url, setClassified);
 	});
 
-	it('Will classify landfill items based on description', function(done){
+	it('Classifies landfill items based on description', function(done){
 		var classified;
 
 		var setClassified = function(category){
 			classified = category;
 			expect(classified).to.equal('landfill');
+			db.db.query('TRUNCATE items');
 			done();
 		};
 
