@@ -5,85 +5,85 @@ var expect   = require('chai').expect,
     db       = require('../db/config.js');
 
 describe('Persistent Sifter Server', function(){
-	var requestWithSession = request.defaults({jar: true});
+  var requestWithSession = request.defaults({jar: true});
 
-	it('Can receive requests and return responses from the server', function(done){
-		var options = {
+  it('Can receive requests and return responses from the server', function(done){
+    var options = {
       'method': 'GET',
       'followAllRedirects': true,
       'uri': 'http://localhost:8080/api/test'
-     };
+    };
 
     requestWithSession(options, function(error, res, body){
-    	expect(res.statusCode).to.equal(200);
-    	expect(res.body).to.equal('SUCCESS!');
-			done();
+      expect(res.statusCode).to.equal(200);
+      expect(res.body).to.equal('SUCCESS!');
+      done();
     });
-	});
+  });
 });
 
 describe('Item Classifier', function(){
 
-	var recycle  =  { description: { name: 'plastic bottle'},
-                    url: 'http://recycle.com' },
-		  compost  =  { description: { name: 'paper plate'},
-		                url: 'http://compost.com'},
-		  landFill =  { description: { name: 'metal cup'},
-		                url: 'http://landfill.com'};
+  var recycle = {
+  	    description: { name: 'plastic bottle'},
+        url: 'http://recycle.com' },
+      compost = {
+      	description: { name: 'paper plate'},
+        url: 'http://compost.com'},
+      landFill =  {
+      	description: { name: 'metal cup'},
+        url: 'http://landfill.com'};
 
-	beforeEach(function(done){
-		db.db.query("TRUNCATE items").then(function(){ done(); });;
-	});
-
-  it('Saves classified item to the database', function(done){
-  	var getEntry = function(){
-  		db.Item.find({where: {url: 'http://www.test.com' }}).then(function(item) {
-  			expect(item.dataValues.category).to.equal('recycle');
-  			expect(item.dataValues.description).to.equal(string.name);
-  			expect(item.dataValues.url).to.equal('http://www.test.com');
-  			done();
-			});
-  	};
-
-  	var string = {};
-  	string.name = 'midnight blue wool tuxedo';
-  	blackBox(string, 'http://www.test.com', getEntry);
+  beforeEach(function(done){
+    db.db.query("TRUNCATE items").then(function(){ done(); });;
   });
 
-	it('Classifies recyclable items based on description', function(done){
-		var classified;
+  it('Saves classified item to the database', function(done){
+    var getEntry = function(){
+      db.Item.find({where: {url: 'http://www.test.com' }}).then(function(item) {
+      	expect(item.dataValues.category).to.equal('recycle');
+      	expect(item.dataValues.description).to.equal(string.name);
+      	expect(item.dataValues.url).to.equal('http://www.test.com');
+      	done();
+      });
+    };
 
-		var setClassified = function(category){
-			classified = category;
-			expect(classified).to.equal('recycle');
-			done();
-		};
+    var string = {};
+    string.name = 'midnight blue wool tuxedo';
+    blackBox(string, 'http://www.test.com', getEntry);
+  });
 
-		blackBox(recycle.description, recycle.url, setClassified);
-	});
+  it('Classifies recyclable items based on description', function(done){
+  	var classified;
+  	var setClassified = function(category){
+  		classified = category;
+  		expect(classified).to.equal('recycle');
+  		done();
+  	};
 
-	it('Classifies compostable items based on description', function(done){
-		var classified;
+    blackBox(recycle.description, recycle.url, setClassified);
+  });
 
-		var setClassified = function(category){
-			classified = category;
-			expect(classified).to.equal('compost');
-			done();
-		};
+  it('Classifies compostable items based on description', function(done){
+  	var classified;
+  	var setClassified = function(category){
+  		classified = category;
+  		expect(classified).to.equal('compost');
+  		done();
+  	};
 
-		blackBox(compost.description, compost.url, setClassified);
-	});
+    blackBox(compost.description, compost.url, setClassified);
+  });
 
-	it('Classifies landfill items based on description', function(done){
-		var classified;
+  it('Classifies landfill items based on description', function(done){
+  	var classified;
+  	var setClassified = function(category){
+  		classified = category;
+  		expect(classified).to.equal('landfill');
+  		db.db.query('TRUNCATE items');
+  		done();
+  	};
 
-		var setClassified = function(category){
-			classified = category;
-			expect(classified).to.equal('landfill');
-			db.db.query('TRUNCATE items');
-			done();
-		};
-
-		blackBox(landFill.description, landFill.url, setClassified);
-	});
+    blackBox(landFill.description, landFill.url, setClassified);
+  });
 });
