@@ -38,7 +38,9 @@ describe('Item Classifier', function(){
         url: 'http://landfill.com'};
   //clear DB before each test
   beforeEach(function(done){
-    db.db.query("TRUNCATE items").then(function(){ done(); });;
+    db.db.sync().then(function(){
+      db.db.query("TRUNCATE items").then(function(){ done(); });
+    });
   });
 
   it('Saves classified item to the database', function(done){
