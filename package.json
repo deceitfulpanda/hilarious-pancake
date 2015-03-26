@@ -7,7 +7,7 @@
   "description": "Sift your trash",
   "main": "server.js",
   "scripts": {
-    "test": "node server.js | mocha test/ServerSpec.js"
+    "test": "node server.js & mocha test/ServerSpec.js; RES=$?; kill %1; exit $RES"
   },
   "repository": {
     "type": "git",
