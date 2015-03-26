@@ -7,13 +7,15 @@ var Sequelize = require('sequelize');
 
 /*==================== SET UP DB CONNECTION ====================*/
 var url = process.env.DATABASE_URL || 'postgres://postgres:hello@localhost:5432/postgres';
-var match = url.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
+// var match = url.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
+var port = process.env.DATABASE_PORT || 5432;
+var host = process.env.DATABASE_HOST || 'localhost';
 
 var sequelize = new Sequelize(url, {
   dialect: 'postgres',
   protocol: 'postgres',
-  port: match[4],
-  host: match[3],
+  port: port,
+  host: host,
   logging: false,
 
   pool: {
