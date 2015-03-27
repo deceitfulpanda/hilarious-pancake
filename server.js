@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var unirest = require('unirest');
 var blackBox = require('./app/classify.js');
+var itemController = require('./app/controller.js');
 var app = express();
 
 /*================= INITIALIZE EXPRESS MODULES =================*/
@@ -28,6 +29,8 @@ app.get('/api/test', function(req, res){
   res.status(200).send('SUCCESS!');
 });
 
+app.get('/api/stats', itemController.getItems);
+
 app.post('/api/imgurl', function(req, res){
   unirest.post("https://camfind.p.mashape.com/image_requests")
     .header("X-Mashape-Key", process.env.CAMFIND_KEY)
@@ -40,7 +43,7 @@ app.post('/api/imgurl', function(req, res){
     .end(function (result) {
       getReq(result.body.token, req.body.imgurl, function(resultBody, imgURL){
         blackBox(resultBody, imgURL, function(classification){
-          res.send(200, {classification: classification, description: resultBody});
+          res.status(200).send({classification: classification, description: resultBody});
         });
       });
     });

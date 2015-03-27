@@ -24,7 +24,53 @@ describe('Persistent Sifter Server', function(){
   });
 });
 
-/*================== TEST CLASSIFICATION AND DB ==================*/
+/*========================= TEST DATABASE =========================*/
+describe('Postgres DB', function(){
+  var requestWithSession = request.defaults({jar: true});
+  var options = {
+    'method': 'GET',
+    'followAllRedirects': true,
+    'uri': 'http://localhost:8080/api/stats'
+  };
+  //clear DB before each test
+  beforeEach(function(done){
+    db.db.sync().then(function(){
+      db.db.query("TRUNCATE items").then(function(){ done(); });
+    });
+  });
+
+  it('Returns an object storing arrays of item counts', function(done){
+    requestWithSession(options, function(error, res, body){
+      var obj = JSON.parse(res.body);
+      expect(res.statusCode).to.equal(200);
+      expect(typeof obj).to.equal('object');
+      expect(Array.isArray(obj.recycle)).to.equal(true);
+      expect(Array.isArray(obj.compost)).to.equal(true);
+      expect(Array.isArray(obj.landfill)).to.equal(true);
+      done();
+    });
+  });
+
+  it('Returns counts of items added by day', function(done){
+    db.db.sync().then(function(){
+      db.Item.create({
+        category: 'recycle',
+        description: 'midnight blue wool tuxedo',
+        url: 'http://www.test.com'
+      }).then(function(){
+        requestWithSession(options, function(error, res, body){
+          var obj = JSON.parse(res.body);
+          expect(res.statusCode).to.equal(200);
+          expect(obj.recycle[6]).to.equal(1);
+          expect(obj.totalRecycle).to.equal(1);
+          done();
+        });
+      });
+    });
+  });
+});
+
+/*====================== TEST CLASSIFICATION ======================*/
 describe('Item Classifier', function(){
   //initialize variables for each category
   var recycle = {
