@@ -34,7 +34,7 @@ module.exports = {
 						} else if (item.category === 'compost'){
 							result.compost[time]++;
 							result.totalCompost++;
-						} else if (item.category === 'landpost'){
+						} else if (item.category === 'landfill'){
 							result.landfill[time]++;
 							result.totalLandfill++;
 						}
