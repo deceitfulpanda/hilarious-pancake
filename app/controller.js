@@ -17,12 +17,12 @@ module.exports = {
 		db.db.sync().then(function(){
 			db.Item.findAll().then(function(items){
 				var result = {};
-				result.recycle = [1,2,3,4,5,6,7];
-				result.compost = [7,6,5,4,3,2,1];
-				result.landfill = [4,0,4,0,4,0,0];
-				result.totalRecycle = 1;
-				result.totalCompost = 5;
-				result.totalLandfill = 9;
+				result.recycle = [0,0,0,0,0,0,0];
+				result.compost = [0,0,0,0,0,0,0];
+				result.landfill = [0,0,0,0,0,0,0];
+				result.totalRecycle = 0;
+				result.totalCompost = 0;
+				result.totalLandfill = 0;
 
 				for (var i = 0; i < items.length; i++){
 					var item = items[i].dataValues;
@@ -81,7 +81,7 @@ module.exports = {
 		land[7] = new Data('landfill', 'green metal cup', 'http://pandasiftertest.com');
 		land[8] = new Data('landfill', 'purple metal cup', 'http://pandasiftertest.com');
 		land[9] = new Data('landfill', 'orange metal cup', 'http://pandasiftertest.com');
-		
+
 		db.db.sync().then(function(){
 			for (var i = 0; i < 10; i++){
 				db.Item.create(rec[i]);
