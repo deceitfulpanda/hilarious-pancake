@@ -10,6 +10,13 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+/*========================= ALLOW CORS =========================*/
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 /*================= INITIALIZE HELPER FUNCTIONS =================*/
 var getReq = function(token, imgurl, callback){
   unirest.get("https://camfind.p.mashape.com/image_responses/" + token)
