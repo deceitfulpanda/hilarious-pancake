@@ -38,6 +38,8 @@ app.get('/api/test', function(req, res){
 
 app.get('/api/stats', itemController.getItems);
 
+app.get('/api/mock', itemController.mockData);
+
 app.post('/api/imgurl', function(req, res){
   unirest.post("https://camfind.p.mashape.com/image_requests")
     .header("X-Mashape-Key", process.env.CAMFIND_KEY)
