@@ -4,6 +4,7 @@ var db = require('../db/config');
 
 /*=============== SET UP CLASSIFY HELPER FUNCTION ===============*/
 var blackBox = function(description, imgUrl, callback){
+  console.log(description, imgUrl);
   var classification;
   //load classifying data from json object
   natural.BayesClassifier.load('./app/classifier.json', null, function(err, classifier) {
