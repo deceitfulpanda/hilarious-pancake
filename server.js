@@ -41,6 +41,7 @@ app.get('/api/stats', itemController.getItems);
 app.get('/api/mock', itemController.mockData);
 
 app.post('/api/imgurl', function(req, res){
+  console.log('posting');
   unirest.post("https://camfind.p.mashape.com/image_requests")
     .header("X-Mashape-Key", process.env.CAMFIND_KEY)
     .header("Content-Type", "application/x-www-form-urlencoded")
